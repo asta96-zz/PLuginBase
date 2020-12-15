@@ -1,0 +1,262 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="String1" xml:space="preserve">
+    <value>&lt;?xml version='1.0' encoding='UTF-8'?&gt;
+&lt;ns2:merchantSearchResultList xmlns:ns3="http://www.cybersource.com/v1/schema/merchant" xmlns:ns2="http://www.w3.org/2005/Atom"&gt;
+&lt;ns3:merchantSearch&gt;
+&lt;ns3:merchantId&gt;dcc_template48157066&lt;/ns3:merchantId&gt;
+&lt;ns3:merchantName&gt;Cybersource Corp&lt;/ns3:merchantName&gt;
+&lt;ns3:status&gt;test&lt;/ns3:status&gt;
+&lt;ns3:testDate&gt;2020-11-25T06:10:00Z&lt;/ns3:testDate&gt;
+&lt;ns3:parentAccountNumber&gt;auto_dcc_mmboarding_reseller&lt;/ns3:parentAccountNumber&gt;
+&lt;ns3:parentMerchantId&gt;auto_dcc_mmboarding_reseller&lt;/ns3:parentMerchantId&gt;
+&lt;ns3:reportMerchantId&gt;dcc_template48157066_acct&lt;/ns3:reportMerchantId&gt;
+&lt;ns3:accessId&gt;720111702585409581&lt;/ns3:accessId&gt;
+&lt;ns3:accountId&gt;720111702585406245&lt;/ns3:accountId&gt;
+&lt;ns3:businessContact&gt;
+&lt;ns3:firstName&gt;Vikram&lt;/ns3:firstName&gt;
+&lt;ns3:lastName&gt;Kumar&lt;/ns3:lastName&gt;
+&lt;ns3:emailAddress&gt;business@gmail.com&lt;/ns3:emailAddress&gt;
+&lt;ns3:phone&gt;6502145698&lt;/ns3:phone&gt;
+&lt;ns3:verifyMobile&gt;false&lt;/ns3:verifyMobile&gt;
+&lt;ns3:mobileVerified&gt;false&lt;/ns3:mobileVerified&gt;
+&lt;ns3:emailVerified&gt;false&lt;/ns3:emailVerified&gt;
+&lt;/ns3:businessContact&gt;
+&lt;ns3:technicalContact&gt;
+&lt;ns3:firstName&gt;Vikram&lt;/ns3:firstName&gt;
+&lt;ns3:lastName&gt;Kumar&lt;/ns3:lastName&gt;
+&lt;ns3:emailAddress&gt;technical@gmail.com&lt;/ns3:emailAddress&gt;
+&lt;ns3:phone&gt;6502145698&lt;/ns3:phone&gt;
+&lt;ns3:verifyMobile&gt;false&lt;/ns3:verifyMobile&gt;
+&lt;ns3:mobileVerified&gt;false&lt;/ns3:mobileVerified&gt;
+&lt;ns3:emailVerified&gt;false&lt;/ns3:emailVerified&gt;
+&lt;/ns3:technicalContact&gt;
+&lt;ns3:emergencyContact&gt;
+&lt;ns3:firstName&gt;Manuela&lt;/ns3:firstName&gt;
+&lt;ns3:lastName&gt;Kumar&lt;/ns3:lastName&gt;
+&lt;ns3:emailAddress&gt;emergency@gmail.com&lt;/ns3:emailAddress&gt;
+&lt;ns3:phone&gt;5107894561&lt;/ns3:phone&gt;
+&lt;ns3:verifyMobile&gt;false&lt;/ns3:verifyMobile&gt;
+&lt;ns3:mobileVerified&gt;false&lt;/ns3:mobileVerified&gt;
+&lt;ns3:emailVerified&gt;false&lt;/ns3:emailVerified&gt;
+&lt;/ns3:emergencyContact&gt;
+&lt;ns3:shippingContact&gt;
+&lt;ns3:verifyMobile&gt;false&lt;/ns3:verifyMobile&gt;
+&lt;ns3:mobileVerified&gt;false&lt;/ns3:mobileVerified&gt;
+&lt;ns3:emailVerified&gt;false&lt;/ns3:emailVerified&gt;
+&lt;/ns3:shippingContact&gt;
+&lt;ns3:billingAddress&gt;
+&lt;ns3:addressLine1&gt;55 Tester St &lt;/ns3:addressLine1&gt;
+&lt;ns3:addressLine2&gt; Address Two 5&lt;/ns3:addressLine2&gt;
+&lt;ns3:city&gt;Foster City&lt;/ns3:city&gt;
+&lt;ns3:state&gt;MA&lt;/ns3:state&gt;
+&lt;ns3:postalOrZipCode&gt;94403&lt;/ns3:postalOrZipCode&gt;
+&lt;ns3:countryName&gt;us&lt;/ns3:countryName&gt;
+&lt;/ns3:billingAddress&gt;
+&lt;ns3:billingPhone&gt;3473337548&lt;/ns3:billingPhone&gt;
+&lt;ns3:icsSalesOffice&gt;united_states&lt;/ns3:icsSalesOffice&gt;
+&lt;ns3:timeZone&gt;Pacific/Pago_Pago&lt;/ns3:timeZone&gt;
+&lt;ns3:solutionType&gt;cybs_ent&lt;/ns3:solutionType&gt;
+&lt;ns3:attributes&gt;
+&lt;ns3:attribute&gt;
+&lt;ns3:name&gt;merchant_country&lt;/ns3:name&gt;
+&lt;ns3:value&gt;US&lt;/ns3:value&gt;
+&lt;/ns3:attribute&gt;
+&lt;ns3:attribute&gt;
+&lt;ns3:name&gt;card_present_enabled&lt;/ns3:name&gt;
+&lt;ns3:value&gt;n&lt;/ns3:value&gt;
+&lt;/ns3:attribute&gt;
+&lt;ns3:attribute&gt;
+&lt;ns3:name&gt;gateway_name&lt;/ns3:name&gt;
+&lt;ns3:value&gt;networkintluae&lt;/ns3:value&gt;
+&lt;/ns3:attribute&gt;
+&lt;/ns3:attributes&gt;
+&lt;ns3:isPartner&gt;false&lt;/ns3:isPartner&gt;
+&lt;ns3:merchantProcessors&gt;networkintluae&lt;/ns3:merchantProcessors&gt;
+&lt;/ns3:merchantSearch&gt;
+&lt;ns3:merchantSearch&gt;
+&lt;ns3:merchantId&gt;smartfdc_automation15420441&lt;/ns3:merchantId&gt;
+&lt;ns3:merchantName&gt;VisaV&lt;/ns3:merchantName&gt;
+&lt;ns3:status&gt;test&lt;/ns3:status&gt;
+&lt;ns3:testDate&gt;2020-11-25T05:16:00Z&lt;/ns3:testDate&gt;
+&lt;ns3:parentAccountNumber&gt;cybsbank&lt;/ns3:parentAccountNumber&gt;
+&lt;ns3:parentMerchantId&gt;cybsbank&lt;/ns3:parentMerchantId&gt;
+&lt;ns3:reportMerchantId&gt;smartfdc_automation15420441_acct&lt;/ns3:reportMerchantId&gt;
+&lt;ns3:accessId&gt;720111702585407831&lt;/ns3:accessId&gt;
+&lt;ns3:accountId&gt;720111702585404495&lt;/ns3:accountId&gt;
+&lt;ns3:businessContact&gt;
+&lt;ns3:firstName&gt;Carlos&lt;/ns3:firstName&gt;
+&lt;ns3:lastName&gt;Doe&lt;/ns3:lastName&gt;
+&lt;ns3:emailAddress&gt;business@gmail.com&lt;/ns3:emailAddress&gt;
+&lt;ns3:phone&gt;5107894561&lt;/ns3:phone&gt;
+&lt;ns3:verifyMobile&gt;false&lt;/ns3:verifyMobile&gt;
+&lt;ns3:mobileVerified&gt;false&lt;/ns3:mobileVerified&gt;
+&lt;ns3:emailVerified&gt;false&lt;/ns3:emailVerified&gt;
+&lt;/ns3:businessContact&gt;
+&lt;ns3:technicalContact&gt;
+&lt;ns3:firstName&gt;Carlos&lt;/ns3:firstName&gt;
+&lt;ns3:lastName&gt;Doe&lt;/ns3:lastName&gt;
+&lt;ns3:emailAddress&gt;technical@gmail.com&lt;/ns3:emailAddress&gt;
+&lt;ns3:phone&gt;5107894561&lt;/ns3:phone&gt;
+&lt;ns3:verifyMobile&gt;false&lt;/ns3:verifyMobile&gt;
+&lt;ns3:mobileVerified&gt;false&lt;/ns3:mobileVerified&gt;
+&lt;ns3:emailVerified&gt;false&lt;/ns3:emailVerified&gt;
+&lt;/ns3:technicalContact&gt;
+&lt;ns3:emergencyContact&gt;
+&lt;ns3:firstName&gt;Jane&lt;/ns3:firstName&gt;
+&lt;ns3:lastName&gt;Doe&lt;/ns3:lastName&gt;
+&lt;ns3:emailAddress&gt;emergency@gmail.com&lt;/ns3:emailAddress&gt;
+&lt;ns3:phone&gt;2697894561&lt;/ns3:phone&gt;
+&lt;ns3:verifyMobile&gt;false&lt;/ns3:verifyMobile&gt;
+&lt;ns3:mobileVerified&gt;false&lt;/ns3:mobileVerified&gt;
+&lt;ns3:emailVerified&gt;false&lt;/ns3:emailVerified&gt;
+&lt;/ns3:emergencyContact&gt;
+&lt;ns3:shippingContact&gt;
+&lt;ns3:verifyMobile&gt;false&lt;/ns3:verifyMobile&gt;
+&lt;ns3:mobileVerified&gt;false&lt;/ns3:mobileVerified&gt;
+&lt;ns3:emailVerified&gt;false&lt;/ns3:emailVerified&gt;
+&lt;/ns3:shippingContact&gt;
+&lt;ns3:billingAddress&gt;
+&lt;ns3:addressLine1&gt;33 Tester St &lt;/ns3:addressLine1&gt;
+&lt;ns3:addressLine2&gt; Address Two 3&lt;/ns3:addressLine2&gt;
+&lt;ns3:city&gt;Union City&lt;/ns3:city&gt;
+&lt;ns3:state&gt;MA&lt;/ns3:state&gt;
+&lt;ns3:postalOrZipCode&gt;94587&lt;/ns3:postalOrZipCode&gt;
+&lt;ns3:countryName&gt;us&lt;/ns3:countryName&gt;
+&lt;/ns3:billingAddress&gt;
+&lt;ns3:billingPhone&gt;3471478956&lt;/ns3:billingPhone&gt;
+&lt;ns3:icsSalesOffice&gt;united_states&lt;/ns3:icsSalesOffice&gt;
+&lt;ns3:timeZone&gt;Pacific/Pago_Pago&lt;/ns3:timeZone&gt;
+&lt;ns3:solutionType&gt;cybs_ent&lt;/ns3:solutionType&gt;
+&lt;ns3:attributes&gt;
+&lt;ns3:attribute&gt;
+&lt;ns3:name&gt;card_present_enabled&lt;/ns3:name&gt;
+&lt;ns3:value&gt;n&lt;/ns3:value&gt;
+&lt;/ns3:attribute&gt;
+&lt;ns3:attribute&gt;
+&lt;ns3:name&gt;gateway_name&lt;/ns3:name&gt;
+&lt;ns3:value&gt;smartfdc&lt;/ns3:value&gt;
+&lt;/ns3:attribute&gt;
+&lt;/ns3:attributes&gt;
+&lt;ns3:isPartner&gt;false&lt;/ns3:isPartner&gt;
+&lt;/ns3:merchantSearch&gt;
+&lt;/ns2:merchantSearchResultList&gt;</value>
+  </data>
+</root>

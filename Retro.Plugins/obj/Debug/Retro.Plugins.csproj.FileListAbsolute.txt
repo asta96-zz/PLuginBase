@@ -1,0 +1,11 @@
+C:\Users\KM485TT\source\repos\Retro.Plugins\Retro.Plugins\bin\Debug\Retro.Plugins.dll
+C:\Users\KM485TT\source\repos\Retro.Plugins\Retro.Plugins\bin\Debug\Retro.Plugins.pdb
+C:\Users\KM485TT\source\repos\Retro.Plugins\Retro.Plugins\bin\Debug\Microsoft.Crm.Sdk.Proxy.dll
+C:\Users\KM485TT\source\repos\Retro.Plugins\Retro.Plugins\bin\Debug\Microsoft.Xrm.Sdk.dll
+C:\Users\KM485TT\source\repos\Retro.Plugins\Retro.Plugins\obj\Debug\Retro.Plugins.csproj.CoreCompileInputs.cache
+C:\Users\KM485TT\source\repos\Retro.Plugins\Retro.Plugins\obj\Debug\Retro.Plugins.csproj.CopyComplete
+C:\Users\KM485TT\source\repos\Retro.Plugins\Retro.Plugins\obj\Debug\Retro.Plugins.dll
+C:\Users\KM485TT\source\repos\Retro.Plugins\Retro.Plugins\obj\Debug\Retro.Plugins.pdb
+C:\Users\KM485TT\source\repos\Retro.Plugins\Retro.Plugins\obj\Debug\Retro.Plugins.csprojAssemblyReference.cache
+C:\Users\KM485TT\source\repos\Retro.Plugins\Retro.Plugins\obj\Debug\Retro.Plugins.Resource1.resources
+C:\Users\KM485TT\source\repos\Retro.Plugins\Retro.Plugins\obj\Debug\Retro.Plugins.csproj.GenerateResource.cache
