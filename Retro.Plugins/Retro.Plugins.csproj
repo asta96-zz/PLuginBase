@@ -62,7 +62,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
-    <Compile Include="CreateWorkHistoryOnQItemUpdate.cs" />
+    <Compile Include="Common\BusinessLogic.cs" />
+    <Compile Include="Common\Modal.cs" />
+    <Compile Include="Queueitem\PostOperationCreateQueueItem.cs" />
     <Compile Include="ResolveFromBackend.cs" />
     <Compile Include="Resource1.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -73,7 +75,7 @@
     <Compile Include="Update on Account Name.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UpdateAccountDescription.cs" />
-    <Compile Include="updateHistoryCaseStatusOwnerChange.cs" />
+    <Compile Include="Case\PostOperationUpdateCase.cs" />
     <Compile Include="UpdateWorkHistoryOnQItemCreate.cs" />
   </ItemGroup>
   <ItemGroup>

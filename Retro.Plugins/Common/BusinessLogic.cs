@@ -10,8 +10,25 @@ namespace Retro.Plugins.Common
         public Guid CreateWorkHistory(Entity _preWorkHistory, Entity Case, IOrganizationService service, Entity QueueItem =null)
         {
             Entity _newWorkHistory = new Entity("new_queueworkhistory");
-            EntityReference CaseOwner = FetchCaseOwner(Case);
+           
             EntityReference CaseStatus = FetchCaseStatus(Case);
+            EntityReference CaseOwner = FetchCaseOwner(Case);
+            if (CaseStatus != null)
+            {
+                _newWorkHistory["new_casestatusreason"] = new EntityReference(CaseStatus.LogicalName, CaseStatus.Id);
+            }//
+            _newWorkHistory["statuscode"] = new OptionSetValue(1);//1 - active
+           _newWorkHistory["new_timespendbeforerouting"] = _preWorkHistory["new_timespendbeforerouting"];
+            _newWorkHistory["new_case"] = Case.ToEntityReference();
+            _newWorkHistory["new_name"] = Case["title"];
+            if(QueueItem != null)
+            {
+                _newWorkHistory["new_queue"] = new EntityReference(QueueItem.GetAttributeValue<EntityReference>("queueid").LogicalName, QueueItem.GetAttributeValue<EntityReference>("queueid").Id);
+                _newWorkHistory["new_queueitem"] = QueueItem.ToEntityReference();
+                _newWorkHistory["new_enteredqueue"] = QueueItem.GetAttributeValue<DateTime>("enteredon");
+                CaseOwner = FetchCaseOwner(QueueItem);
+            }
+           
             if (CaseOwner != null)
             {
                 if (CaseOwner.LogicalName.ToLower().Equals("systemuser"))
@@ -22,20 +39,6 @@ namespace Retro.Plugins.Common
                 {
                     _newWorkHistory["new_workedbyteam"] = new EntityReference(CaseOwner.LogicalName, CaseOwner.Id);
                 }
-            }
-            if (CaseStatus != null)
-            {
-                _newWorkHistory["new_casestatusreason"] = new EntityReference(CaseStatus.LogicalName, CaseStatus.Id);
-            }//
-            _newWorkHistory["statuscode"] = new OptionSetValue(1);//1 - active
-
-           _newWorkHistory["new_timespendbeforerouting"] = _preWorkHistory["new_timespendbeforerouting"];
-            _newWorkHistory["new_case"] = Case.ToEntityReference();
-            _newWorkHistory["new_name"] = FetchCaseOwner(Case).Name;
-            if(QueueItem != null)
-            {
-                _newWorkHistory["cr32a_queue"] = new EntityReference(QueueItem.GetAttributeValue<EntityReference>("queueid").LogicalName, QueueItem.GetAttributeValue<EntityReference>("queueid").Id);
-                _newWorkHistory["new_enteredqueue"] = QueueItem.GetAttributeValue<DateTime>("enteredon");
             }
 
             Guid _newID = service.Create(_newWorkHistory);
@@ -155,10 +158,19 @@ namespace Retro.Plugins.Common
         public EntityReference FetchCaseOwner(Entity Target)
         {
             EntityReference CaseOwner = null;
-
-            if (Target.Attributes.Contains("ownerid"))
+            if (Target.LogicalName.ToUpper().Equals(Modal.CaseLogicalName.ToUpper()))
             {
-                CaseOwner = new EntityReference(Target.GetAttributeValue<EntityReference>("ownerid").LogicalName, Target.GetAttributeValue<EntityReference>("ownerid").Id);
+                if (Target.Attributes.Contains("ownerid"))
+                {
+                    CaseOwner = new EntityReference(Target.GetAttributeValue<EntityReference>("ownerid").LogicalName, Target.GetAttributeValue<EntityReference>("ownerid").Id);
+                }
+            }
+            else if(Target.LogicalName.ToUpper().Equals(Modal.QueueITemLogicalName.ToUpper()))
+            {
+                if (Target.Attributes.Contains("workerid"))
+                {
+                    CaseOwner = new EntityReference(Target.GetAttributeValue<EntityReference>("workerid").LogicalName, Target.GetAttributeValue<EntityReference>("workerid").Id);
+                }
             }
 
             return CaseOwner;
