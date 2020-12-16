@@ -8,7 +8,7 @@ namespace Retro.Plugins.Common
 {
    public  class Modal
     {
-      public static string[] caseColumns = { "title","modifiedon","ownerid", "new_typeofcase", "dev_casetypestatus" };
+      public static string[] caseColumns = { "title","modifiedon","ownerid", "cr32a_casestatusreason", "cr32a_typeofcase" };
        public static string[]queueIemColumns = { "" };
     }
 }

@@ -10,8 +10,8 @@ namespace Retro.Plugins
         private Guid CaseId = Guid.Empty;
         const string Case = "case";
         const string Active = "active";
-        const string ClosedID = "95d97865-e93d-eb11-a813-000d3ac9ccda";
-        const string ActiveID = "b46dd35d-e93d-eb11-a813-000d3ac9ccda";
+        const string ClosedID = "0e78cefb-6f3f-eb11-a813-000d3a18ee0f";
+        const string ActiveID = "a0aba2da-6f3f-eb11-a813-000d3a18ee0f";
         const string Closed = "closed";
         const string IncidentCaseType = "incident";
 
@@ -33,7 +33,7 @@ namespace Retro.Plugins
                     //Entity CasePreImage = context.PreEntityImages["PreImage"];
                     Entity Case = CommonLogic.RecordFetch(service, CaseTarget.LogicalName, CaseTarget.Id, Modal.caseColumns);
 
-                    if (Case.FormattedValues["new_typeofcase"].ToString().ToUpper().Equals(IncidentCaseType.ToUpper()))
+                    if (Case.FormattedValues["cr32a_typeofcase"].ToString().ToUpper().Equals(IncidentCaseType.ToUpper()))
                     {
                         CaseId = CaseTarget.Id;
                         tracing.Trace("before fetching previous workHistory method");
@@ -60,9 +60,9 @@ namespace Retro.Plugins
                                 tracing.Trace("after calling create workHistory method");
                             }
                         }
-                        else if(CaseTarget.Attributes.Contains("dev_casetypestatus"))
+                        else if(CaseTarget.Attributes.Contains("cr32a_casestatusreason"))
                         {
-                            string CaseStatusID = CaseTarget.GetAttributeValue<EntityReference>("dev_casetypestatus").Id.ToString();
+                            string CaseStatusID = CaseTarget.GetAttributeValue<EntityReference>("cr32a_casestatusreason").Id.ToString();
                             if (CaseStatusID.ToUpper().Equals(ClosedID.ToUpper()))
                             {
                                 //resolved or closed

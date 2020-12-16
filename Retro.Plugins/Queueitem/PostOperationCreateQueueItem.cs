@@ -7,7 +7,7 @@ namespace Retro.Plugins
 {
     public class CreateWorkHistoryOnQItemUpdate : IPlugin
     {
-        CreateWorkHistoryOnQItemUpdate()
+       public CreateWorkHistoryOnQItemUpdate()
         {
             BusinessLogic businessLogic = new BusinessLogic();
         }
@@ -22,27 +22,29 @@ namespace Retro.Plugins
             IOrganizationService service = serviceFactory.CreateOrganizationService(context.UserId);
 
             ITracingService tracing = (ITracingService)serviceProvider.GetService(typeof(ITracingService));
-            tracing.Trace(" **************** CreateWorkHistoryOnQItemUpdat *************plugin triggered ");
+            tracing.Trace(" **************** CreateWorkHistoryOnQItemCreate *************plugin triggered ");
 
             if (context.InputParameters.Contains("Target") && context.InputParameters["Target"] is Entity && context.PrimaryEntityName.ToUpper().Equals(QueueItem.ToUpper()))
             {
-                Entity Target = context.InputParameters["Target"] as Entity;
-                string objectType = Target.FormattedValues.Contains("objecttypecode") ? Target.FormattedValues["objecttypecode"] : string.Empty;
+                Entity QueueTarget = context.InputParameters["Target"] as Entity;
+                string objectType = QueueTarget.FormattedValues.Contains("objecttypecode") ? QueueTarget.FormattedValues["objecttypecode"] : string.Empty;
                 Entity caseRecord = null;
-                caseRecord = FetchCase(Target, service);
+                caseRecord = FetchCase(QueueTarget, service);
                 try
                 {
                     if (string.Equals(Case.ToUpper(), objectType.ToUpper()) && caseRecord != null)
                     {
-                        //fetch previous workhistory record
-                       Entity preWorkHistory= common.FetchPreviousWorkHistory(service, caseRecord.Id, tracing);
 
+                        //fetch previous workhistory record
+                        tracing.Trace("Before fetch previous record with active status");
+                       Entity preWorkHistory= common.FetchPreviousWorkHistory(service, caseRecord.Id, tracing);
+                        tracing.Trace("Before updating previous record");
                         // update previous workhistory record
                         bool updateWH = common.UpdateWorkHistory(preWorkHistory, service, caseRecord, tracing);
-
                         if(updateWH)
                         {
-                            common.CreateWorkHistory(preWorkHistory, caseRecord, service);
+                            tracing.Trace("Before creating new record with active status");
+                            common.CreateWorkHistory(preWorkHistory, caseRecord, service, QueueTarget);
                         }
                         //create new one 
                     }
@@ -57,16 +59,12 @@ namespace Retro.Plugins
                     tracing.Trace("error has worked " + ex.ToString());
                     //  throw;
                 }
-
             }
             else
             {
                 tracing.Trace("Target is not an Entity ");
                 return;
             }
-
-
-
         }
 
         private Entity FetchCase(Entity target, IOrganizationService service)
@@ -79,6 +77,7 @@ namespace Retro.Plugins
             FilterExpression filter1 = new FilterExpression();
             filter1.Conditions.Add(condition1);
             QueryExpression query = new QueryExpression("incident");
+            query.ColumnSet.AddColumns(Common.Modal.caseColumns);
             query.Criteria.AddFilter(filter1);
 
             EntityCollection incidentCollection = service.RetrieveMultiple(query);

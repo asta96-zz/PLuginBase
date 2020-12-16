@@ -1,16 +1,15 @@
 ﻿using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
-using Retro.Plugins.Common;
 using System;
 using System.Linq;
 
 namespace Retro.Plugins.Common
 {
-  public  class BusinessLogic
+    public class BusinessLogic
     {
-        public Guid CreateWorkHistory(Entity _preWorkHistory, Entity Case, IOrganizationService service)
+        public Guid CreateWorkHistory(Entity _preWorkHistory, Entity Case, IOrganizationService service, Entity QueueItem =null)
         {
-            Entity _newWorkHistory = new Entity(_preWorkHistory.LogicalName);
+            Entity _newWorkHistory = new Entity("new_queueworkhistory");
             EntityReference CaseOwner = FetchCaseOwner(Case);
             EntityReference CaseStatus = FetchCaseStatus(Case);
             if (CaseOwner != null)
@@ -27,10 +26,18 @@ namespace Retro.Plugins.Common
             if (CaseStatus != null)
             {
                 _newWorkHistory["new_casestatusreason"] = new EntityReference(CaseStatus.LogicalName, CaseStatus.Id);
-            }// _newWorkHistory["statuscode"] = new OptionSetValue(1);//1 - active
+            }//
+            _newWorkHistory["statuscode"] = new OptionSetValue(1);//1 - active
 
-            _newWorkHistory["new_case"] = _preWorkHistory["new_case"];
-            _newWorkHistory["new_name"] = _preWorkHistory["new_name"];
+           _newWorkHistory["new_timespendbeforerouting"] = _preWorkHistory["new_timespendbeforerouting"];
+            _newWorkHistory["new_case"] = Case.ToEntityReference();
+            _newWorkHistory["new_name"] = FetchCaseOwner(Case).Name;
+            if(QueueItem != null)
+            {
+                _newWorkHistory["cr32a_queue"] = new EntityReference(QueueItem.GetAttributeValue<EntityReference>("queueid").LogicalName, QueueItem.GetAttributeValue<EntityReference>("queueid").Id);
+                _newWorkHistory["new_enteredqueue"] = QueueItem.GetAttributeValue<DateTime>("enteredon");
+            }
+
             Guid _newID = service.Create(_newWorkHistory);
             return _newID;
         }
@@ -42,19 +49,22 @@ namespace Retro.Plugins.Common
             _preWorkHistory["new_timespendbycurrentuser"] = _preWorkHistory.Attributes.Contains("new_calctimespendbycurruser") ? _preWorkHistory.GetAttributeValue<decimal>("new_calctimespendbycurruser") : new decimal(0.00);
             _preWorkHistory["new_timespendbycaseinqueue"] = _preWorkHistory.Attributes.Contains("new_calctimespendqueue") ? _preWorkHistory.GetAttributeValue<decimal>("new_calctimespendqueue") : new decimal(0.00);
             _preWorkHistory["new_totaltimespendoncase"] = _preWorkHistory.Attributes.Contains("new_calctotaltimespendoncase") ? _preWorkHistory.GetAttributeValue<decimal>("new_calctotaltimespendoncase") : new decimal(0.00);
-            if (!(_preWorkHistory.Attributes.Contains("new_workedbyuser") && _preWorkHistory["new_workedbyuser"] != null) && !(_preWorkHistory.Attributes.Contains("new_workedbyteam") && _preWorkHistory["new_workedbyteam"] != null))
+            if (!_preWorkHistory.Attributes.Contains("new_workedbyuser") && !_preWorkHistory.Attributes.Contains("new_workedbyteam")
+               && !_preWorkHistory.Attributes.Contains("new_timespendbeforerouting"))
             {
                 DateTime _caseModifiedon = Case.GetAttributeValue<DateTime>("modifiedon");
                 DateTime _workHistoryCreatedon = _preWorkHistory.GetAttributeValue<DateTime>("createdon");
-                TimeSpan _timebeforeRouting = _workHistoryCreatedon.Subtract(_caseModifiedon);
-                _preWorkHistory["new_timespendbeforerouting"] = Convert.ToDecimal(_timebeforeRouting.TotalHours);
+                TimeSpan _timebeforeRouting = _caseModifiedon.Subtract(_workHistoryCreatedon);
+                    
+                _preWorkHistory["new_timespendbeforerouting"] = Convert.ToDecimal(_timebeforeRouting.TotalMinutes);
             }
+            
             EntityReference CaseStatus = FetchCaseStatus(Case);
             if (CaseStatus != null)
             {
-                _preWorkHistory["dev_casestatusreason"] = new EntityReference(CaseStatus.LogicalName, CaseStatus.Id);
+                _preWorkHistory["new_casestatusreason"] = new EntityReference(CaseStatus.LogicalName, CaseStatus.Id);
             }
-            _preWorkHistory["statuscode"] = new OptionSetValue(293050000);//closed-293050000
+            _preWorkHistory["statuscode"] = new OptionSetValue(100000000);//closed-100000000
             service.Update(_preWorkHistory);
             isUpdated = true;
             tracing.Trace("Updated existing  Work history:" + _preWorkHistory.Id.ToString());
@@ -64,14 +74,16 @@ namespace Retro.Plugins.Common
         {
             string FetchWorkHistory = $@"<fetch >
                                           <entity name='new_queueworkhistory' >
-                                            <attribute name='new_workedbyuser' />
+                                            <attribute name='new_workedbyteam' />
                                             <attribute name='new_case' />
                                             <attribute name='new_name' />
-                                            <attribute name='new_calctimespendbycurruser' />
+                                            <attribute name='new_calculatedtimespendbycaseinqueue' />
                                             <attribute name='new_calctotaltimespendoncase' />
-                                            <attribute name='new_casestatus' />
-                                            <attribute name='new_workedbyteam' />
-                                            <attribute name='new_calctimespendqueue' />
+                                            <attribute name='new_calctimespendbycurruser' />
+                                            <attribute name='new_casestatusreason' />
+                                            <attribute name='createdon' />
+                                            <attribute name='new_workedbyuser' />                                            
+                                            <attribute name='new_timespendbeforerouting' />
                                             <filter type='and' >
                                               <condition attribute='new_case' operator='eq' value='{CaseId}' />
                                               <condition attribute='statuscode' operator='eq' value='1' />
@@ -86,6 +98,34 @@ namespace Retro.Plugins.Common
             {
                 tracing.Trace("Fetched WorkHistory Count:" + coll.Entities.Count);
                 History = coll.Entities.FirstOrDefault();
+            }
+            else
+            {
+                FetchWorkHistory = $@"<fetch >
+                                          <entity name='new_queueworkhistory' >
+                                            <attribute name='new_workedbyteam' />
+                                            <attribute name='new_case' />
+                                            <attribute name='new_name' />
+                                            <attribute name='new_calculatedtimespendbycaseinqueue' />
+                                            <attribute name='new_calctotaltimespendoncase' />
+                                            <attribute name='new_calctimespendbycurruser' />
+                                            <attribute name='new_casestatusreason' />
+                                            <attribute name='createdon' />
+                                            <attribute name='new_workedbyuser' />                                            
+                                            <attribute name='new_timespendbeforerouting' />
+                                            <filter type='and' >
+                                              <condition attribute='new_case' operator='eq' value='{CaseId}' />                                             
+                                              <condition attribute='new_timespendbeforerouting' operator='not-null' />                                             
+                                              </filter>
+                                          </entity>
+                                        </fetch>";
+                 coll = service.RetrieveMultiple(new FetchExpression(FetchWorkHistory));
+
+                if (coll.Entities.Count > 0)
+                {
+                    tracing.Trace("Fetched WorkHistory Count:" + coll.Entities.Count);
+                    History = coll.Entities.FirstOrDefault();
+                }
             }
 
             return History;
@@ -103,9 +143,9 @@ namespace Retro.Plugins.Common
         {
             EntityReference CaseStatus = null;
 
-            if (Target.Attributes.Contains("dev_casetypestatus"))
+            if (Target.Attributes.Contains("cr32a_casestatusreason"))
             {
-                CaseStatus = new EntityReference(Target.GetAttributeValue<EntityReference>("dev_casetypestatus").LogicalName, Target.GetAttributeValue<EntityReference>("dev_casetypestatus").Id);
+                CaseStatus = new EntityReference(Target.GetAttributeValue<EntityReference>("cr32a_casestatusreason").LogicalName, Target.GetAttributeValue<EntityReference>("cr32a_casestatusreason").Id);
             }
 
             return CaseStatus;
