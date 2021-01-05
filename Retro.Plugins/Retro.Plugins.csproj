@@ -61,6 +61,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Case\PreCreateCase.cs" />
     <Compile Include="Class1.cs" />
     <Compile Include="Common\BusinessLogic.cs" />
     <Compile Include="Common\Modal.cs" />

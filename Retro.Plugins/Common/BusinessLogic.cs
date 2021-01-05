@@ -12,13 +12,13 @@ namespace Retro.Plugins.Common
             Entity _newWorkHistory = new Entity("new_queueworkhistory");
            
             EntityReference CaseStatus = FetchCaseStatus(Case);
-            EntityReference CaseOwner = FetchCaseOwner(Case);
+            EntityReference Owner = FetchOwner(Case);
             if (CaseStatus != null)
             {
                 _newWorkHistory["new_casestatusreason"] = new EntityReference(CaseStatus.LogicalName, CaseStatus.Id);
             }//
             _newWorkHistory["statuscode"] = new OptionSetValue(1);//1 - active
-           _newWorkHistory["new_timespendbeforerouting"] = _preWorkHistory["new_timespendbeforerouting"];
+          // _newWorkHistory["new_timespendbeforerouting"] = _preWorkHistory["new_timespendbeforerouting"];
             _newWorkHistory["new_case"] = Case.ToEntityReference();
             _newWorkHistory["new_name"] = Case["title"];
             if(QueueItem != null)
@@ -26,18 +26,24 @@ namespace Retro.Plugins.Common
                 _newWorkHistory["new_queue"] = new EntityReference(QueueItem.GetAttributeValue<EntityReference>("queueid").LogicalName, QueueItem.GetAttributeValue<EntityReference>("queueid").Id);
                 _newWorkHistory["new_queueitem"] = QueueItem.ToEntityReference();
                 _newWorkHistory["new_enteredqueue"] = QueueItem.GetAttributeValue<DateTime>("enteredon");
-                CaseOwner = FetchCaseOwner(QueueItem);
+                Owner = FetchOwner(QueueItem);
+            }
+            else if(_preWorkHistory.Attributes.Contains("new_queue"))
+            {
+                _newWorkHistory["new_queue"] = _preWorkHistory["new_queue"];
+                _newWorkHistory["new_queueitem"] = _preWorkHistory["new_queueitem"];
+                _newWorkHistory["new_enteredqueue"] = _preWorkHistory["new_enteredqueue"];
             }
            
-            if (CaseOwner != null)
+            if (Owner != null)
             {
-                if (CaseOwner.LogicalName.ToLower().Equals("systemuser"))
+                if (Owner.LogicalName.ToLower().Equals("systemuser"))
                 {
-                    _newWorkHistory["new_workedbyuser"] = new EntityReference(CaseOwner.LogicalName, CaseOwner.Id);
+                    _newWorkHistory["new_workedbyuser"] = new EntityReference(Owner.LogicalName, Owner.Id);
                 }
                 else
                 {
-                    _newWorkHistory["new_workedbyteam"] = new EntityReference(CaseOwner.LogicalName, CaseOwner.Id);
+                    _newWorkHistory["new_workedbyteam"] = new EntityReference(Owner.LogicalName, Owner.Id);
                 }
             }
 
@@ -52,8 +58,7 @@ namespace Retro.Plugins.Common
             _preWorkHistory["new_timespendbycurrentuser"] = _preWorkHistory.Attributes.Contains("new_calctimespendbycurruser") ? _preWorkHistory.GetAttributeValue<decimal>("new_calctimespendbycurruser") : new decimal(0.00);
             _preWorkHistory["new_timespendbycaseinqueue"] = _preWorkHistory.Attributes.Contains("new_calctimespendqueue") ? _preWorkHistory.GetAttributeValue<decimal>("new_calctimespendqueue") : new decimal(0.00);
             _preWorkHistory["new_totaltimespendoncase"] = _preWorkHistory.Attributes.Contains("new_calctotaltimespendoncase") ? _preWorkHistory.GetAttributeValue<decimal>("new_calctotaltimespendoncase") : new decimal(0.00);
-            if (!_preWorkHistory.Attributes.Contains("new_workedbyuser") && !_preWorkHistory.Attributes.Contains("new_workedbyteam")
-               && !_preWorkHistory.Attributes.Contains("new_timespendbeforerouting"))
+            if (!_preWorkHistory.Attributes.Contains("new_workedbyuser") && !_preWorkHistory.Attributes.Contains("new_workedbyteam"))
             {
                 DateTime _caseModifiedon = Case.GetAttributeValue<DateTime>("modifiedon");
                 DateTime _workHistoryCreatedon = _preWorkHistory.GetAttributeValue<DateTime>("createdon");
@@ -87,6 +92,9 @@ namespace Retro.Plugins.Common
                                             <attribute name='createdon' />
                                             <attribute name='new_workedbyuser' />                                            
                                             <attribute name='new_timespendbeforerouting' />
+                                            <attribute name='new_queue' />
+                                            <attribute name='new_queueitem' />
+                                            <attribute name='new_enteredqueue' />
                                             <filter type='and' >
                                               <condition attribute='new_case' operator='eq' value='{CaseId}' />
                                               <condition attribute='statuscode' operator='eq' value='1' />
@@ -102,35 +110,7 @@ namespace Retro.Plugins.Common
                 tracing.Trace("Fetched WorkHistory Count:" + coll.Entities.Count);
                 History = coll.Entities.FirstOrDefault();
             }
-            else
-            {
-                FetchWorkHistory = $@"<fetch >
-                                          <entity name='new_queueworkhistory' >
-                                            <attribute name='new_workedbyteam' />
-                                            <attribute name='new_case' />
-                                            <attribute name='new_name' />
-                                            <attribute name='new_calculatedtimespendbycaseinqueue' />
-                                            <attribute name='new_calctotaltimespendoncase' />
-                                            <attribute name='new_calctimespendbycurruser' />
-                                            <attribute name='new_casestatusreason' />
-                                            <attribute name='createdon' />
-                                            <attribute name='new_workedbyuser' />                                            
-                                            <attribute name='new_timespendbeforerouting' />
-                                            <filter type='and' >
-                                              <condition attribute='new_case' operator='eq' value='{CaseId}' />                                             
-                                              <condition attribute='new_timespendbeforerouting' operator='not-null' />                                             
-                                              </filter>
-                                          </entity>
-                                        </fetch>";
-                 coll = service.RetrieveMultiple(new FetchExpression(FetchWorkHistory));
-
-                if (coll.Entities.Count > 0)
-                {
-                    tracing.Trace("Fetched WorkHistory Count:" + coll.Entities.Count);
-                    History = coll.Entities.FirstOrDefault();
-                }
-            }
-
+         
             return History;
 
 
@@ -155,25 +135,25 @@ namespace Retro.Plugins.Common
 
         }
 
-        public EntityReference FetchCaseOwner(Entity Target)
+        public EntityReference FetchOwner(Entity Target)
         {
-            EntityReference CaseOwner = null;
+            EntityReference Owner = null;
             if (Target.LogicalName.ToUpper().Equals(Modal.CaseLogicalName.ToUpper()))
             {
                 if (Target.Attributes.Contains("ownerid"))
                 {
-                    CaseOwner = new EntityReference(Target.GetAttributeValue<EntityReference>("ownerid").LogicalName, Target.GetAttributeValue<EntityReference>("ownerid").Id);
+                    Owner = new EntityReference(Target.GetAttributeValue<EntityReference>("ownerid").LogicalName, Target.GetAttributeValue<EntityReference>("ownerid").Id);
                 }
             }
             else if(Target.LogicalName.ToUpper().Equals(Modal.QueueITemLogicalName.ToUpper()))
             {
                 if (Target.Attributes.Contains("workerid"))
                 {
-                    CaseOwner = new EntityReference(Target.GetAttributeValue<EntityReference>("workerid").LogicalName, Target.GetAttributeValue<EntityReference>("workerid").Id);
+                    Owner = new EntityReference(Target.GetAttributeValue<EntityReference>("workerid").LogicalName, Target.GetAttributeValue<EntityReference>("workerid").Id);
                 }
             }
 
-            return CaseOwner;
+            return Owner;
 
         }
     }

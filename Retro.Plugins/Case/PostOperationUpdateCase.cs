@@ -7,7 +7,7 @@ namespace Retro.Plugins
 {
     public class PostOperationUpdateCase : IPlugin
     {
-        private Guid CaseId = Guid.Empty;
+        Guid CaseId = Guid.Empty;       
         const string Case = "case";
         const string Active = "active";
         const string ClosedID = "0e78cefb-6f3f-eb11-a813-000d3a18ee0f";

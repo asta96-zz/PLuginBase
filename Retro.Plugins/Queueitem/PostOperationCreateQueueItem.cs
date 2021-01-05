@@ -78,6 +78,7 @@ namespace Retro.Plugins
             filter1.Conditions.Add(condition1);
             QueryExpression query = new QueryExpression("incident");
             query.ColumnSet.AddColumns(Common.Modal.caseColumns);
+            query.ColumnSet.AddColumns("incide");
             query.Criteria.AddFilter(filter1);
 
             EntityCollection incidentCollection = service.RetrieveMultiple(query);
