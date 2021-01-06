@@ -66,7 +66,6 @@ namespace Retro.Plugins
                 return;
             }
         }
-
         private Entity FetchCase(Entity target, IOrganizationService service)
         {
             Entity caseRecord = null;
@@ -77,20 +76,14 @@ namespace Retro.Plugins
             FilterExpression filter1 = new FilterExpression();
             filter1.Conditions.Add(condition1);
             QueryExpression query = new QueryExpression("incident");
-            query.ColumnSet.AddColumns(Common.Modal.caseColumns);
-            query.ColumnSet.AddColumns("incide");
+            query.ColumnSet.AddColumns(Common.Modal.caseColumns);            
             query.Criteria.AddFilter(filter1);
-
             EntityCollection incidentCollection = service.RetrieveMultiple(query);
-
             if (incidentCollection.Entities.Count > 0)
             {
                 caseRecord = incidentCollection.Entities.FirstOrDefault();
             }
             return caseRecord;
         }
-
-      
-
     }
 }
