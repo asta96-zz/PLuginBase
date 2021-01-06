@@ -28,13 +28,13 @@ namespace Retro.Plugins.Common
                 _newWorkHistory["new_enteredqueue"] = QueueItem.GetAttributeValue<DateTime>("enteredon");
                 Owner = FetchOwner(QueueItem);
             }
-            else if(_preWorkHistory.Attributes.Contains("new_queue"))
+            else if((_preWorkHistory!=null)&&(_preWorkHistory.Attributes.Contains("new_queue")))
             {
                 _newWorkHistory["new_queue"] = _preWorkHistory["new_queue"];
                 _newWorkHistory["new_queueitem"] = _preWorkHistory["new_queueitem"];
                 _newWorkHistory["new_enteredqueue"] = _preWorkHistory["new_enteredqueue"];
             }
-           
+
             if (Owner != null)
             {
                 if (Owner.LogicalName.ToLower().Equals("systemuser"))
@@ -110,7 +110,35 @@ namespace Retro.Plugins.Common
                 tracing.Trace("Fetched WorkHistory Count:" + coll.Entities.Count);
                 History = coll.Entities.FirstOrDefault();
             }
-         
+            else
+            {
+                FetchWorkHistory = $@"<fetch >	
+                                          <entity name='new_queueworkhistory' >	
+                                            <attribute name='new_workedbyteam' />	
+                                            <attribute name='new_case' />	
+                                            <attribute name='new_name' />	
+                                            <attribute name='new_calculatedtimespendbycaseinqueue' />	
+                                            <attribute name='new_calctotaltimespendoncase' />	
+                                            <attribute name='new_calctimespendbycurruser' />	
+                                            <attribute name='new_casestatusreason' />	
+                                            <attribute name='createdon' />	
+                                            <attribute name='new_workedbyuser' />                                            	
+                                            <attribute name='new_timespendbeforerouting' />	
+                                            <filter type='and' >	
+                                              <condition attribute='new_case' operator='eq' value='{CaseId}' />                                             	
+                                              <condition attribute='new_timespendbeforerouting' operator='not-null' />                                             	
+                                              </filter>	
+                                          </entity>	
+                                        </fetch>";
+                coll = service.RetrieveMultiple(new FetchExpression(FetchWorkHistory));
+
+                if (coll.Entities.Count > 0)
+                {
+                    tracing.Trace("Fetched WorkHistory Count:" + coll.Entities.Count);
+                    History = coll.Entities.FirstOrDefault();
+                }
+            }
+
             return History;
 
 
