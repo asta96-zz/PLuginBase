@@ -1,20 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xrm.Sdk;
+﻿using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
+using System;
 
 namespace Retro.Plugins
 {
-    public  class RestricResolve : IPlugin
+    public class RestricResolve : IPlugin
     {
-
         public void Execute(IServiceProvider serviceProvider)
         {
             IPluginExecutionContext context = (IPluginExecutionContext)serviceProvider.GetService(typeof(IPluginExecutionContext));
-            IOrganizationServiceFactory serviceFactory =(IOrganizationServiceFactory) serviceProvider.GetService(typeof(IOrganizationServiceFactory));
+            IOrganizationServiceFactory serviceFactory = (IOrganizationServiceFactory)serviceProvider.GetService(typeof(IOrganizationServiceFactory));
             IOrganizationService service = serviceFactory.CreateOrganizationService(context.UserId);
 
             ITracingService tracing = (ITracingService)serviceProvider.GetService(typeof(ITracingService));
@@ -23,13 +18,13 @@ namespace Retro.Plugins
             {
                 Entity incidentResolution = (Entity)context.InputParameters["IncidentResolution"];
                 Guid relatedIncidentGuid = ((EntityReference)incidentResolution.Attributes["incidentid"]).Id;
-               
+
                 // Obtain the organization service reference.
 
                 bool HaschildCase = CheckChildCase(relatedIncidentGuid, service);
-                if(HaschildCase)
+                if (HaschildCase)
                 {
-                    throw new InvalidPluginExecutionException(OperationStatus.Succeeded,"It has One or More Child Cases in Active state, hence cannot resolve the parent case");
+                    throw new InvalidPluginExecutionException(OperationStatus.Succeeded, "It has One or More Child Cases in Active state, hence cannot resolve the parent case");
                 }
             }
         }
@@ -37,7 +32,7 @@ namespace Retro.Plugins
         private bool CheckChildCase(Guid relatedIncidentGuid, IOrganizationService service)
         {
             string FetchCase = @"<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>
-                                <entity name='incident'>   
+                                <entity name='incident'>
                                 <attribute name='incidentid' />
                                 <attribute name='caseorigincode' />
                                 <order attribute='title' descending='false' />
@@ -47,7 +42,7 @@ namespace Retro.Plugins
                                 </filter>
                                 </entity>
                             </fetch>";
-            EntityCollection ChildColl = service.RetrieveMultiple(new FetchExpression(string.Format(FetchCase,relatedIncidentGuid)));
+            EntityCollection ChildColl = service.RetrieveMultiple(new FetchExpression(string.Format(FetchCase, relatedIncidentGuid)));
             if (ChildColl != null && ChildColl.Entities != null)
                 return (ChildColl.Entities.Count > 0);
             else

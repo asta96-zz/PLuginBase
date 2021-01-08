@@ -1,21 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xrm.Sdk;
+﻿using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using System;
+using System.Linq;
 
 namespace Retro.Plugins
 {
     public class UpdateWorkHistoryOnQItemCreate : IPlugin
     {
         //const string Case = "case";
-        const string QueueItem = "queueitem";
+        private const string QueueItem = "queueitem";
 
         private Guid CaseId = Guid.Empty;
-       
 
         public void Execute(IServiceProvider serviceProvider)
         {
@@ -25,9 +20,9 @@ namespace Retro.Plugins
             ITracingService tracing = (ITracingService)serviceProvider.GetService(typeof(ITracingService));
             tracing.Trace(" **************** CreateWorkHistoryOnQItemUpdat *************plugin triggered ");
 
-            /*Assign (update of case owner):- 
+            /*Assign (update of case owner):-
             //update operation
-            Step 1: fetch the previous work history record and all the calculate field values. Filter (status = active) 
+            Step 1: fetch the previous work history record and all the calculate field values. Filter (status = active)
 
             Step 2: Copy the calculated field values and update in the dummy field value in same record. Also update status = inactive . Do Service.Update()
 
@@ -71,6 +66,7 @@ namespace Retro.Plugins
             Guid _newID = service.Create(_newWorkHistory);
             return _newID;
         }
+
         internal bool UpdateWorkHistory(Entity _preWorkHistory, IOrganizationService service, Entity Case, ITracingService tracing)
         {
             tracing.Trace("inside UpdateWorkHistory method");
@@ -82,8 +78,9 @@ namespace Retro.Plugins
             isUpdated = true;
             tracing.Trace("Updated existing  Work history:" + _preWorkHistory.Id.ToString());
             return isUpdated;
-         }
-        private Entity FetchPreviousWorkHistory(IOrganizationService service,Guid CaseId, ITracingService tracing)
+        }
+
+        private Entity FetchPreviousWorkHistory(IOrganizationService service, Guid CaseId, ITracingService tracing)
         {
             string FetchWorkHistory = $@"<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>
                                       <entity name='new_queueworkhistory'>
@@ -100,7 +97,7 @@ namespace Retro.Plugins
                                     </fetch>";
             Entity History = null;
             EntityCollection coll = service.RetrieveMultiple(new FetchExpression(FetchWorkHistory));
-            
+
             if (coll.Entities.Count > 0)
             {
                 tracing.Trace("Fetched WorkHistory Count:" + coll.Entities.Count);
@@ -108,8 +105,6 @@ namespace Retro.Plugins
             }
 
             return History;
-
-
         }
     }
 }

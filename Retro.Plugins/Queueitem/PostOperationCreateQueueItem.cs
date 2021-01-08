@@ -3,50 +3,48 @@ using Microsoft.Xrm.Sdk.Query;
 using Retro.Plugins.Common;
 using System;
 using System.Linq;
+
 namespace Retro.Plugins
 {
     public class CreateWorkHistoryOnQItemUpdate : IPlugin
     {
-       public CreateWorkHistoryOnQItemUpdate()
-        {
-            BusinessLogic businessLogic = new BusinessLogic();
-        }
+        private const string Case = "case";
+        private const string QueueItem = "queueitem";
 
-        const string Case = "case";
-        const string QueueItem = "queueitem";
         public void Execute(IServiceProvider serviceProvider)
         {
-            BusinessLogic common = new BusinessLogic();
             IPluginExecutionContext context = (IPluginExecutionContext)serviceProvider.GetService(typeof(IPluginExecutionContext));
             IOrganizationServiceFactory serviceFactory = (IOrganizationServiceFactory)serviceProvider.GetService(typeof(IOrganizationServiceFactory));
             IOrganizationService service = serviceFactory.CreateOrganizationService(context.UserId);
-
             ITracingService tracing = (ITracingService)serviceProvider.GetService(typeof(ITracingService));
+            BusinessLogic common = new BusinessLogic(serviceFactory,tracing);
             tracing.Trace(" **************** CreateWorkHistoryOnQItemCreate *************plugin triggered ");
 
             if (context.InputParameters.Contains("Target") && context.InputParameters["Target"] is Entity && context.PrimaryEntityName.ToUpper().Equals(QueueItem.ToUpper()))
             {
-                Entity QueueTarget = context.InputParameters["Target"] as Entity;
-                string objectType = QueueTarget.FormattedValues.Contains("objecttypecode") ? QueueTarget.FormattedValues["objecttypecode"] : string.Empty;
+                Entity queueItem = context.InputParameters["Target"] as Entity;
+                string objectType = queueItem.FormattedValues.Contains("objecttypecode") ? queueItem.FormattedValues["objecttypecode"] : string.Empty;
                 Entity caseRecord = null;
-                caseRecord = FetchCase(QueueTarget, service);
+                string queueName = queueItem.Attributes.Contains("queueid") ? common.FetchQueueName(((EntityReference)queueItem["queueid"]).Id) : "";
+                tracing.Trace("queue name {0}", queueName);
+                caseRecord = FetchCase(queueItem, service);
                 try
                 {
                     if (string.Equals(Case.ToUpper(), objectType.ToUpper()) && caseRecord != null)
                     {
-
                         //fetch previous workhistory record
                         tracing.Trace("Before fetch previous record with active status");
-                       Entity preWorkHistory= common.FetchPreviousWorkHistory(service, caseRecord.Id, tracing);
+                        Entity preWorkHistory = common.FetchPreviousWorkHistory(service, caseRecord.Id, tracing);
                         tracing.Trace("Before updating previous record");
                         // update previous workhistory record
-                        bool updateWH = common.UpdateWorkHistory(preWorkHistory, service, caseRecord, tracing);
-                        if(updateWH)
-                        {
+                       // bool updateWH = common.UpdateWorkHistory(preWorkHistory, caseRecord, tracing);
+                        //if (updateWH && !string.IsNullOrEmpty(queueName))
+                        //{
                             tracing.Trace("Before creating new record with active status");
-                            common.CreateWorkHistory(preWorkHistory, caseRecord, service, QueueTarget);
-                        }
-                        //create new one 
+                            // common.CreateWorkHistory(preWorkHistory, caseRecord, service, QueueTarget);
+                            common.updateCaseOwner(caseRecord, queueName);
+                        //}
+                        //create new one
                     }
                     else
                     {
@@ -66,6 +64,7 @@ namespace Retro.Plugins
                 return;
             }
         }
+
         private Entity FetchCase(Entity target, IOrganizationService service)
         {
             Entity caseRecord = null;
@@ -76,7 +75,7 @@ namespace Retro.Plugins
             FilterExpression filter1 = new FilterExpression();
             filter1.Conditions.Add(condition1);
             QueryExpression query = new QueryExpression("incident");
-            query.ColumnSet.AddColumns(Common.Modal.caseColumns);            
+            query.ColumnSet.AddColumns(Common.Modal.caseColumns);
             query.Criteria.AddFilter(filter1);
             EntityCollection incidentCollection = service.RetrieveMultiple(query);
             if (incidentCollection.Entities.Count > 0)
