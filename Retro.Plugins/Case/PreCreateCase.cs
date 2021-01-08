@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xrm.Sdk;
+﻿using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using Retro.Plugins.Common;
 using System;
+using System.Linq;
+
 namespace Retro.Plugins.Case
 {
     public class PreCreateCase : IPlugin
@@ -36,19 +33,17 @@ namespace Retro.Plugins.Case
                     string url = string.Concat("https://", orgUrl, ".crm.dynamics.com/main.aspx?" +
                         "appid=", appId,
                         "&pagetype=entityrecord",
-                        "&etn=", context.PrimaryEntityName,                        
+                        "&etn=", context.PrimaryEntityName,
                         "&id=", CaseTarget.Id);
 
                     CaseTarget["description"] = url;
                 }
                 catch (Exception ex)
                 {
-
-                    throw new InvalidPluginExecutionException(string.Concat(ex.Message,"   stack trace:",ex.StackTrace), ex);
+                    throw new InvalidPluginExecutionException(string.Concat(ex.Message, "   stack trace:", ex.StackTrace), ex);
                 }
-               
-                //@"https://myorg.crm.dynamics.com/main.aspx?etn=account&pagetype=entityrecord&id=%7B91330924-802A-4B0D-A900-34FD9D790829%7D";
 
+                //@"https://myorg.crm.dynamics.com/main.aspx?etn=account&pagetype=entityrecord&id=%7B91330924-802A-4B0D-A900-34FD9D790829%7D";
             }
         }
 
@@ -59,7 +54,7 @@ namespace Retro.Plugins.Case
 
             // Instantiate QueryExpression QEappmodule
             QueryExpression QEappmodule = new QueryExpression("appmodule");
-            
+
             // Add columns to QEappmodule.ColumnSet
             QEappmodule.ColumnSet.AddColumns("publisherid", "appmoduleidunique", "name", "organizationid", "appmoduleid");
 
@@ -67,16 +62,15 @@ namespace Retro.Plugins.Case
             QEappmodule.Criteria.AddCondition("name", ConditionOperator.Equal, QEappmodule_name);
 
             EntityCollection Collection = service.RetrieveMultiple(QEappmodule);
-            return Collection.Entities.FirstOrDefault().Attributes.Contains("appmoduleidunique") ? Convert.ToString(Collection.Entities.FirstOrDefault().Id):"";
+            return Collection.Entities.FirstOrDefault().Attributes.Contains("appmoduleidunique") ? Convert.ToString(Collection.Entities.FirstOrDefault().Id) : "";
         }
+
         private string GetOrgName(IOrganizationService service, ITracingService tracing, Guid organizationId)
         {
             // Define Condition Values
             Entity Org = service.Retrieve("organization", organizationId, new ColumnSet("name"));
 
-
             return Org["name"].ToString();
-
 
             QueryExpression organizationquery = new QueryExpression("organization")
             {

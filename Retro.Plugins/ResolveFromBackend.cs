@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Query;
-using Microsoft.Crm.Sdk.Messages;
+using System;
 
 namespace Retro.Plugins
 {
@@ -23,7 +18,6 @@ namespace Retro.Plugins
                 tracing.Trace("contains CaseRecord ID" + ((EntityReference)context.InputParameters["caseRecordId"]).Id);
                 tracing.Trace("contains CaseRecord Name" + ((EntityReference)context.InputParameters["caseRecordId"]).Name);
 
-                
                 EntityReference Incident = context.InputParameters["Target"] as EntityReference;
                 Entity Incidentresolution = new Entity("incidentresolution");
                 Incidentresolution["subject"] = "Closed via backend";
@@ -35,11 +29,8 @@ namespace Retro.Plugins
                     Status = new OptionSetValue(5)
                 };
 
-
-                
                 var closeResponse =
                     (CloseIncidentResponse)service.Execute(closeIncidentRequest);
-
             }
             else
             {
